@@ -6,6 +6,9 @@ import {
     APP_NAME as appName,
 } from "./src/init/const.mjs";
 import {
+    loadDatabase,
+} from "./src/init/phishingtank.mjs";
+import {
     getOverview,
 } from "./src/config.mjs";
 import {
@@ -14,16 +17,12 @@ import {
 
 // Define plugin promises
 const pluginPromises = [
-    new Promise((resolve) => {
-        console.info("The example to wait the plugin promise.");
-        setTimeout(resolve, 3000);
-    }),
+    loadDatabase(),
 ];
 
 // Define router names
 const routerNames = [
     "root",
-    "example",
 ];
 
 // Define display

@@ -15,6 +15,11 @@ import {
     useApp,
 } from "./init/express.mjs";
 
+import {
+    readScheduleMap,
+    startScheduleTasks,
+} from "./init/schedule.mjs";
+
 /**
  * Setup protocol - http
  * @param {object} app
@@ -73,7 +78,7 @@ const preparingPromises = [];
  * @return {object} the application invoker
  */
 function loadPromises(promises) {
-    if (promises.length < 0) {
+    if (promises.length < 1) {
         return invokeApp();
     }
 
@@ -108,6 +113,10 @@ async function execute() {
 
     // Wait preparing promises
     await Promise.all(preparingPromises);
+
+    // Start schedule tasks
+    readScheduleMap();
+    startScheduleTasks();
 
     // Get enabled protocols
     const enabledProtocols = getSplited("ENABLED_PROTOCOLS");
