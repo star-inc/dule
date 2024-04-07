@@ -8,16 +8,13 @@ import schedule from "node-schedule";
  * @param {object[]} tasks the tasks to load
  */
 export async function startScheduleTasks(tasks) {
-    for (const {name: methodName, config: methodConfig} of tasks) {
+    const createMethod = (name, options) => () => {
         const methodDirectory = new URL("../tasks/", import.meta.url);
-        const methodFilename = new URL(`${methodName}.mjs`, methodDirectory);
-
-        const createMethod = (options) => () => {
-            import(methodFilename).then((f) => f.default(options));
-        };
-        for (const config of methodConfig) {
-            const method = createMethod(config);
-            schedule.scheduleJob(config.time, method);
-        }
+        const methodFilename = new URL(`${name}.mjs`, methodDirectory);
+        import(methodFilename).then((f) => f.default(options));
+    };
+    for (const {name, options} of tasks) {
+        const method = createMethod(name, options);
+        schedule.scheduleJob(options.time, method);
     }
 }

@@ -23,7 +23,7 @@ const pluginPromises = [
 // Define schedule tasks
 const scheduleTasks = [{
     name: "refresh",
-    config: {
+    options: {
         time: "0 6 * * *",
     },
 }];
