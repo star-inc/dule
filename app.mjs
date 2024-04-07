@@ -20,6 +20,14 @@ const pluginPromises = [
     loadDatabase(),
 ];
 
+// Define schedule tasks
+const scheduleTasks = [{
+    name: "refresh",
+    config: {
+        time: "0 6 * * *",
+    },
+}];
+
 // Define router names
 const routerNames = [
     "root",
@@ -40,6 +48,7 @@ const displayStatus = (protocolStatus) => {
 // Mount application and execute it
 invokeApp().
     loadPromises(pluginPromises).
+    loadTasks(scheduleTasks).
     loadRoutes(routerNames).
     execute().
     then(displayStatus);

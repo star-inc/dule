@@ -16,7 +16,6 @@ import {
 } from "./init/express.mjs";
 
 import {
-    readScheduleMap,
     startScheduleTasks,
 } from "./init/schedule.mjs";
 
@@ -64,6 +63,7 @@ async function setupHttpsProtocol(app) {
 export function invokeApp() {
     return {
         loadPromises,
+        loadTasks,
         loadRoutes,
         execute,
     };
@@ -71,6 +71,9 @@ export function invokeApp() {
 
 // Define preparing promises
 const preparingPromises = [];
+
+// Define preparing tasks
+const scheduleTasks = [];
 
 /**
  * Load promises to be executed before running the application.
@@ -83,6 +86,20 @@ function loadPromises(promises) {
     }
 
     preparingPromises.push(...promises);
+    return invokeApp();
+}
+
+/**
+ * Load tasks to be executed before running the application.
+ * @param {object[]} tasks the tasks to load
+ * @return {object} the application invoker
+ */
+function loadTasks(tasks) {
+    if (tasks.length < 1) {
+        return invokeApp();
+    }
+
+    scheduleTasks.push(...tasks);
     return invokeApp();
 }
 
@@ -115,8 +132,7 @@ async function execute() {
     await Promise.all(preparingPromises);
 
     // Start schedule tasks
-    readScheduleMap();
-    startScheduleTasks();
+    await startScheduleTasks(scheduleTasks);
 
     // Get enabled protocols
     const enabledProtocols = getSplited("ENABLED_PROTOCOLS");

@@ -1,6 +1,5 @@
 # App config files
 .env
-schedule.toml
 
 # Finder config file
 .DS_Store
